@@ -93,6 +93,11 @@ function NormalVec(v)
 	};
 }
 
+function UnitNormalVec(v)
+{
+	return Norm(NormalVec(v));
+}
+
 function IntersectLine(S1, S2)
 {
 	let u1 = SegmentDiff(S1);
@@ -164,3 +169,16 @@ function Reflect(Vec, NormUnit)
 		y : Vec.y - 2*ip*NormUnit.y,
 	};
 }
+
+let ZeroPt = {x : 0, y: 0 };
+
+function Add(Pt, c, Vec)
+{
+	return {
+		x : Pt.x + c*Vec.x,
+		y : Pt.y + c*Vec.y,
+	};
+}
+
+
+

@@ -16,6 +16,7 @@ function CreateNormalWall()
 			Ball.BounceBack(seg);
 			// just bounce back
 		},
+		SetPosition : function(pos) {},
 	};
 }
 
@@ -24,8 +25,8 @@ function CreatePlayerWall(Player)
 		return {
 		init : function (Main) 
 		{
-			Main.Keyboard.Add(Player.control.left, () => bat.MoveLeft());
-			Main.Keyboard.Add(Player.control.right, () => bat.MoveRight());
+			Main.Keyboard.Add(Player.info.control.left, () => this.bat.MoveLeft());
+			Main.Keyboard.Add(Player.info.control.right, () => this.bat.MoveRight());
 		},
 		bat : CreateBat(),		
 		draw : function (Canvas, Segment) 
@@ -47,12 +48,13 @@ function CreatePlayerWall(Player)
 			if (bat.Covers(t))
 				Ball.BounceBack(seg);
 		},
+		SetPosition : function (Pos) { this.bat.SetPosition(Pos); },
 	};
 }
 
 function CreatePortalWall()
 {
-	
+
 }
 
 
@@ -141,8 +143,7 @@ function DrawScene(Main, Canvas)
 
 	let S1 = CreateSegment_Coords(0, 0, 50, (i%100));
 	let S2 = CreateSegment_Coords(50, 0, 0, 50);
-
-
+	
 	// for each wall draw it on its position
 	Main.Walls.forEach((w, i) => w.draw(Canvas, Main.WallSegments[i]) );
 	
@@ -179,6 +180,9 @@ function OnStart(Main, Canvas)
 	
 	
 	Main.WallSegments = GenerateWallSegments(Canvas.CenterPoint, Canvas.Height/3, Main.Walls.length);
+	Main.Walls.forEach((w,i) => w.SetPosition(Main.WallSegments[i]));
+	
+	Main.Walls.forEach((w) => w.init(Main));
 	
 	Main.Ball = CreateBall();
 	
@@ -198,6 +202,7 @@ function CreateCanvas(Canvas)
 	rc.transform(1, 0, 0, -1, Canvas.width/2, Canvas.height/2);
 	return {
 		SetColor : function(color) { rc.strokeStyle = color; },
+		SetFillColor : function(color) { rc.fillStyle = color; },
 		DrawLine : function (Position) { 
 			rc.beginPath();
 			rc.moveTo(Position.p1.x, Position.p1.y);
@@ -207,9 +212,9 @@ function CreateCanvas(Canvas)
 		DrawCircle : function(Point, Radius) {
 			rc.beginPath();
 			rc.ellipse(Point.x, Point.y, Radius, Radius, 0, 0, 2 * Math.PI);
-			rc.stroke();
+			rc.stroke();	
 		},
-		DrawPoly : function(Points) {
+		FillPoly : function(Points) {
 			rc.beginPath();
 			rc.moveTo(Points[Points.length-1].x, Points[Points.length-1].y);
 			Points.forEach((pt) => rc.lineTo(pt.x, pt.y));
