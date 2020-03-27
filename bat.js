@@ -1,4 +1,4 @@
-function CreateBat(Main)
+function CreateBat()
 {
 	let Bat = {};
 	
@@ -31,7 +31,7 @@ function CreateBat(Main)
 	
 	Bat.draw = function(Canvas) 
 	{
-		Canvas.DrawLine(Position);
+		Canvas.DrawLine(this.Position);
 		Canvas.FillPoly(Bat.Points);		
 	};
 	Bat.SetPosition = function(Segment)
@@ -55,6 +55,11 @@ function CreateBat(Main)
 		Bat.Points[1] = Add(LeftPt, -Bat.NormVec);
 		Bat.Points[2] = Add(RightPt, -Bat.NormVec);
 		Bat.Points[3] = Add(RightPt, Bat.NormVec);
+	};
+	
+	Bat.Covers = function(t)
+	{
+		return t >= Bat.CurPos && t <= Bat.CurPos + Bat.Width;
 	};
 	
 	return Bat;

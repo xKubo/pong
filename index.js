@@ -11,26 +11,41 @@ function CreateNormalWall()
 			Canvas.SetColor('yellow');
 			Canvas.DrawLine(Segment);
 		},
+		OnBallHit : function(Ball)
+		{
+			Ball.BounceBack(seg);
+			// just bounce back
+		},
 	};
 }
 
 function CreatePlayerWall(Player)
 {	
 		return {
-		init : function (Main) { },
+		init : function (Main) 
+		{
+			Main.Keyboard.Add(Player.control.left, () => bat.MoveLeft());
+			Main.Keyboard.Add(Player.control.right, () => bat.MoveRight());
+		},
+		bat : CreateBat(),		
 		draw : function (Canvas, Segment) 
 		{ 
 			
+			this.bat.draw(Canvas);
+/*			let MidPoint = LinInt(Segment.p1, Segment.p2, 0.5);
 			
-			let MidPoint = LinInt(Segment.p1, Segment.p2, 0.5);
-			
-			var Segment1 = CreateSegment(Segment.p1, MidPoint);
-			var Segment2 = CreateSegment(MidPoint, Segment.p2);
+			let Segment1 = CreateSegment(Segment.p1, MidPoint);
+			let Segment2 = CreateSegment(MidPoint, Segment.p2);
 			
 			Canvas.SetColor('red');
 			Canvas.DrawLine(Segment1);
 			Canvas.SetColor('blue');
-			Canvas.DrawLine(Segment2);
+			Canvas.DrawLine(Segment2);*/
+		},
+		OnBallHit : function(Ball, t)
+		{
+			if (bat.Covers(t))
+				Ball.BounceBack(seg);
 		},
 	};
 }
@@ -45,18 +60,18 @@ function CreatePortalWall()
 
 function GenerateWallSegments(CenterPoint, Size, Count)
 {
-	var Segments = [];
+	let Segments = [];
 	
 	let AngleAdd = 2*Math.PI/Count;
 	
-	var fGetPoint = function(i) {  
+	let fGetPoint = function(i) {  
 		return {
 			x : CenterPoint.x + Size*Math.cos(i*AngleAdd),
 			y : CenterPoint.y - Size*Math.sin(i*AngleAdd),				
 		}
 	};
 		
-	for (var i = 0; i<Count; ++i)
+	for (let i = 0; i<Count; ++i)
 	{
 		let Angle = i*AngleAdd;
 		let Segment = 
@@ -75,17 +90,17 @@ function GenerateWallSegments(CenterPoint, Size, Count)
 
 let PlayerInfos = [
 {	
-	control : { type : 'key', up : 'q', down : 'a'},
+	control : { type : 'key', left : 'w', right : 's'},
 	name : 'P1',
 },
 
 {
-	control : { type : 'key', up : 'p', down : 'l'},
+	control : { type : 'key', left : 'p', right : 'l'},
 	name : 'P2',
 },
 
 {
-	control : { type : 'key', up : 'z', down : 'x'},
+	control : { type : 'key', left : 'z', right : 'x'},
 	name : 'P3',
 }
 

@@ -95,33 +95,6 @@ function NormalVec(v)
 
 function IntersectLine(S1, S2)
 {
-	
-	/*
-	
-	
-X1 = (x1, y1)
-n1 = (a1, b1)
-
-X2 = (x2, y2)
-n2 = (a2, b2)
-
-=======================
-
-a1x + b1y = d1
-a2x + b2y = d2
-
-d1 = a1x1 + b1y1
-d2 = a2x2 + b2y2
-
-=======================
-
-Px = (b2d1 - b1d2)/(a1b2 - a2b1)
-Py = (a1d2 - a2d1)/(a1b2 - a2b1)
-	
-	
-	*/
-	
-	
 	let u1 = SegmentDiff(S1);
 	let u2 = SegmentDiff(S2);
 	
@@ -150,7 +123,7 @@ function TFromPoints(ptBeg, ptEnd, ptMid)
 {
 	let dy = ptEnd.y - ptBeg.y;
 	let dx = ptEnd.x - ptBeg.x;
-	if (abs(dy) > abs(dx))
+	if (Math.abs(dy) > Math.abs(dx))
 	{
 		return (ptMid.y - ptBeg.y)/dy;
 	}
@@ -177,5 +150,17 @@ function IntersectSegments(pos1, pos2)
 		t1 : t1,
 		t2 : t2,
 		pt : pt,
+	};
+}
+
+function Reflect(Vec, NormUnit)
+{
+	//r=d−2(d⋅n)n
+	
+	let ip = Vec.x*NormUnit.x+Vec.y*NormUnit.y;
+	
+	return {
+		x : Vec.x - 2*ip*NormUnit.x,
+		y : Vec.y - 2*ip*NormUnit.y,
 	};
 }
