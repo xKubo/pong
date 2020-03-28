@@ -1,29 +1,4 @@
 
-function CollisionDetector()
-{
-	let res = {};
-	res.Lines = [];
-	res.RegisterLine = function(Segment, Callback, Object)
-	{
-		let LineInfo = {
-			Segment : Segment,
-			Callback : Callback,
-			Object : Object,
-		};
-		res.Lines.push(LineInfo);
-	};
-	res.DetectCollision = function(Segment)
-	{
-		let res = null;
-//		let res = {};
-		//Lines.forEach( li => 
-		return res;
-	};
-	return res;
-}
-
-let BallSize = 5;
-
 function RandDir()
 {
 	let angle = Math.random(2*Math.PI);
@@ -35,13 +10,15 @@ function RandDir()
 
 function CreateBall(Point)
 {
+	let BallSize = 5;
 	let ball = {
-		direction : RandDir(),// { x : 1, y : 0 },
-		speed : 1,
+		direction : {x:1, y:0.2},//RandDir(),
+		speed : 1.5,
 		location : Point,
 		draw : function(Canvas)
 		{			
-			Canvas.DrawCircle(this.location, 5);			
+			Canvas.SetColor('red');
+			Canvas.DrawCircle(this.location, BallSize);			
 		},
 		update : function(CollisionDetector)
 		{
@@ -51,12 +28,13 @@ function CreateBall(Point)
 			if (colres == null)
 				this.location = nl;
 			else
-				colres.Object.OnBallHit(this);
+				colres.Object.OnBallHit(this, colres.tLine);
 		},
 		BounceBack : function(Seg)
 		{
-			let UnitNormal = UnitNormalVec(Seg);
-			this.direction = ReflectVec(direction, UnitNormal);
+			let v = SegmentDiff(Seg);
+			let UnitNormal = UnitNormalVec(v);
+			this.direction = ReflectVec(this.direction, UnitNormal);
 		},
 	};
 	return ball;

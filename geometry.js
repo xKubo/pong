@@ -158,7 +158,7 @@ function IntersectSegments(pos1, pos2)
 	};
 }
 
-function Reflect(Vec, NormUnit)
+function ReflectVec(Vec, NormUnit)
 {
 	//r=d−2(d⋅n)n
 	

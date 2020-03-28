@@ -13,10 +13,13 @@ function CreateNormalWall()
 		},
 		OnBallHit : function(Ball)
 		{
-			Ball.BounceBack(seg);
+			Ball.BounceBack(this.Position);
 			// just bounce back
 		},
-		SetPosition : function(pos) {},
+		SetPosition : function(pos) 
+		{
+			this.Position = pos;			
+		},
 	};
 }
 
@@ -36,10 +39,13 @@ function CreatePlayerWall(Player)
 		},
 		OnBallHit : function(Ball, t)
 		{
-			if (bat.Covers(t))
-				Ball.BounceBack(seg);
+			if (this.bat.Covers(t))
+				Ball.BounceBack(this.Position);
 		},
-		SetPosition : function (Pos) { this.bat.SetPosition(Pos); },
+		SetPosition : function (Pos) { 
+			this.Position = Pos;
+			this.bat.SetPosition(Pos); 
+		},
 	};
 }
 
@@ -137,8 +143,8 @@ function DrawScene(Main, Canvas)
 
 function OnStart(Main, Canvas)
 {
-
-	Main.CollisionDetector = CollisionDetector();
+	let cd = CreateCollisionDetector();
+	Main.CollisionDetector = cd;
 	
 	Main.Players = CreatePlayers(Main, PlayerInfos);
 	Main.Walls = [];
@@ -153,6 +159,8 @@ function OnStart(Main, Canvas)
 	
 	Main.Walls.forEach((w) => w.init(Main));
 	
+	Main.Walls.forEach((w) => cd.RegisterLine(w.Position, w));
+	
 	Main.Ball = CreateBall(CreatePoint(0,0));
 	
 
@@ -162,8 +170,8 @@ function OnStart(Main, Canvas)
 function CreateCanvas(Canvas)
 {
 	let cp = {
-		x : 0,//Canvas.width/2,
-		y : 0, // Canvas.height/2,
+		x : 0,
+		y : 0,
 	};		
 	var rc = Canvas.getContext('2d');
 	rc.transform(1, 0, 0, -1, Canvas.width/2, Canvas.height/2);
@@ -213,6 +221,8 @@ window.GetMain = function()
 	{
 		init : function (idCnv, idDiv) {
 			this.h5cnv = $(idCnv)[0];
+			this.h5cnv.width = screen.width;
+			this.h5cnv.height = screen.height;
 			this.rc = this.h5cnv.getContext('2d');
 			this.div = $(idDiv)[0];
 			this.rc.lineWidth = 3;

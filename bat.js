@@ -9,29 +9,23 @@ function CreateBat()
 	Bat.MaxPos = 1 - Bat.Width;
 	
 	Bat.CurPos = (Bat.MaxPos - Bat.MinPos)/2;
-	Bat.Step = 0.05;
+	Bat.Step = 0.02;
 	
 	
 	Bat.Points = [];
 	
 	Bat.MoveRight = function()
 	{
-		if (Bat.CurPos < Bat.MaxPos)
-		{
-			Bat.CurPos += Bat.Step;
-			Bat.UpdatePoints();
-		}
-		
+		let incr = Math.min(Bat.MaxPos - Bat.CurPos, Bat.Step);
+		Bat.CurPos += incr;
+		Bat.UpdatePoints();	
 	};
 	
 	Bat.MoveLeft = function()
 	{
-		if (Bat.CurPos > Bat.MinPos)
-		{
-			Bat.CurPos -= Bat.Step;
-			Bat.UpdatePoints();
-		}
-			
+		let decr = Math.min(Bat.CurPos - Bat.MinPos, Bat.Step);
+		Bat.CurPos -= decr;
+		Bat.UpdatePoints();			
 	};
 	
 	Bat.draw = function(Canvas) 
