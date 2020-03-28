@@ -136,32 +136,27 @@ function DrawSegment(Canvas, Segment)
 	Canvas.DrawLine(Segment);
 }
 
-let i = 0;
+let Bat = CreateBat();
+
 
 function DrawScene(Main, Canvas)
 {
 
-	let S1 = CreateSegment_Coords(0, 0, 50, (i%100));
-	let S2 = CreateSegment_Coords(50, 0, 0, 50);
+	Bat.draw(Canvas);
 	
 	// for each wall draw it on its position
 	Main.Walls.forEach((w, i) => w.draw(Canvas, Main.WallSegments[i]) );
 	
 	
-	Canvas.SetColor('red');
-	DrawSegment(Canvas, S1);
-	Canvas.SetColor('blue');
-	DrawSegment(Canvas, S2);
-	Canvas.SetColor('black');
-	let pt = IntersectLine(S1, S2);
-	if (pt)
-		Canvas.DrawCircle(pt, 5);
-	
-	++i;
 }
 
 function OnStart(Main, Canvas)
 {
+
+	Bat.SetPosition(CreateSegment_Coords(50, 50, 150, 50));
+	
+	Main.Keyboard.Add('q', function(key) {Bat.MoveLeft();});
+	Main.Keyboard.Add('a', function(key) {Bat.MoveRight();});
 	
 	Main.Players = CreatePlayers(Main, PlayerInfos);
 	Main.Walls = [];
@@ -186,8 +181,6 @@ function OnStart(Main, Canvas)
 	
 	Main.Ball = CreateBall();
 	
-	Main.Keyboard.Add('q', function(key) {Main._x += 3;});
-	Main.Keyboard.Add('a', function(key) {Main._x -= 3;});
 
 }
 

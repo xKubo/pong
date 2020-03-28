@@ -5,7 +5,7 @@ function CreateBat()
 	Bat.CurPos = 0;
 	Bat.Step = 0.05;
 	Bat.MinPos = 0;
-	Bat.Width = 0.1;
+	Bat.Width = 0.3;
 	Bat.MaxPos = 1 - Bat.Width;
 	Bat.Points = [];
 	
