@@ -89,12 +89,12 @@ function GenerateWallSegments(CenterPoint, Size, Count)
 
 let PlayerInfos = [
 {	
-	control : { type : 'key', left : 'w', right : 's'},
+	control : { type : 'key', left : 'p', right : 'l'},
 	name : 'P1',
 },
 
 {
-	control : { type : 'key', left : 'p', right : 'l'},
+	control : { type : 'key', left : 's', right : 'w'},
 	name : 'P2',
 },
 

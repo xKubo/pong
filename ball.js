@@ -12,8 +12,8 @@ function CreateBall(Point)
 {
 	let BallSize = 5;
 	let ball = {
-		direction : {x:1, y:0.2},//RandDir(),
-		speed : 1.5,
+		direction : RandDir(),
+		speed : 2,
 		location : Point,
 		draw : function(Canvas)
 		{			
