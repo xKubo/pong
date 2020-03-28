@@ -41,6 +41,8 @@ function CreatePlayerWall(Player)
 		{
 			if (this.bat.Covers(t))
 				Ball.BounceBack(this.Position);
+			else
+				Ball.Stop();
 		},
 		SetPosition : function (Pos) { 
 			this.Position = Pos;
