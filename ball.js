@@ -14,7 +14,8 @@ function CollisionDetector()
 	};
 	res.DetectCollision = function(Segment)
 	{
-		let res = {};
+		let res = null;
+//		let res = {};
 		//Lines.forEach( li => 
 		return res;
 	};
@@ -32,31 +33,23 @@ function RandDir()
 	return res;
 }
 
-function Add(Pt, Speed, Direction)
-{
-	return {
-		x : Pt.x + Speed*Direction.x,
-		y : Pt.y + Speed*Direction.y,
-	};
-}
-
 function CreateBall(Point)
 {
 	let ball = {
-		direction : { x : 1, y : 0 },
+		direction : RandDir(),// { x : 1, y : 0 },
 		speed : 1,
 		location : Point,
 		draw : function(Canvas)
 		{			
-			Canvas.DrawCircle(location, 5);			
+			Canvas.DrawCircle(this.location, 5);			
 		},
 		update : function(CollisionDetector)
 		{
-			let nl = Add(location, speed, direction);
-			let s = CreatePosition(location, nl);
+			let nl = Add(this.location, this.speed, this.direction);
+			let s = CreateSegment(this.location, nl);
 			let colres = CollisionDetector.DetectCollision(s);
 			if (colres == null)
-				location = nl;
+				this.location = nl;
 			else
 				colres.Object.OnBallHit(this);
 		},

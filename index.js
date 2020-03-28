@@ -33,15 +33,6 @@ function CreatePlayerWall(Player)
 		{ 
 			
 			this.bat.draw(Canvas);
-/*			let MidPoint = LinInt(Segment.p1, Segment.p2, 0.5);
-			
-			let Segment1 = CreateSegment(Segment.p1, MidPoint);
-			let Segment2 = CreateSegment(MidPoint, Segment.p2);
-			
-			Canvas.SetColor('red');
-			Canvas.DrawLine(Segment1);
-			Canvas.SetColor('blue');
-			Canvas.DrawLine(Segment2);*/
 		},
 		OnBallHit : function(Ball, t)
 		{
@@ -136,27 +127,18 @@ function DrawSegment(Canvas, Segment)
 	Canvas.DrawLine(Segment);
 }
 
-let Bat = CreateBat();
-
 
 function DrawScene(Main, Canvas)
 {
-
-	Bat.draw(Canvas);
-	
-	// for each wall draw it on its position
 	Main.Walls.forEach((w, i) => w.draw(Canvas, Main.WallSegments[i]) );
-	
-	
+	Main.Ball.update(Main.CollisionDetector);
+	Main.Ball.draw(Canvas);
 }
 
 function OnStart(Main, Canvas)
 {
 
-	Bat.SetPosition(CreateSegment_Coords(50, 50, 150, 50));
-	
-	Main.Keyboard.Add('q', function(key) {Bat.MoveLeft();});
-	Main.Keyboard.Add('a', function(key) {Bat.MoveRight();});
+	Main.CollisionDetector = CollisionDetector();
 	
 	Main.Players = CreatePlayers(Main, PlayerInfos);
 	Main.Walls = [];
@@ -166,20 +148,12 @@ function OnStart(Main, Canvas)
 	Main.Walls.push(CreateNormalWall());
 	Main.Walls.push(CreateNormalWall());
 	
-	/*
-	Main.Players.forEach(function(p)
-	{
-		Main.Walls.push(CreateNormalWall());
-		Main.Walls.push(CreatePlayerWall(p));
-	});*/
-	
-	
 	Main.WallSegments = GenerateWallSegments(Canvas.CenterPoint, Canvas.Height/3, Main.Walls.length);
 	Main.Walls.forEach((w,i) => w.SetPosition(Main.WallSegments[i]));
 	
 	Main.Walls.forEach((w) => w.init(Main));
 	
-	Main.Ball = CreateBall();
+	Main.Ball = CreateBall(CreatePoint(0,0));
 	
 
 }
@@ -249,8 +223,6 @@ window.GetMain = function()
 				" Y:" + -1*(e.clientY - this.BoundRect.top - this.h5cnv.height/2).toFixed(2);
 			});
 			OnStart(this, this.canvas);
-			document.addEventListener('keydown', () => this.keydown = true );
-			document.addEventListener('keyup',  () => this.keydown = false );
 			window.setInterval(() => this.draw(), 10);
 		},
 		
@@ -258,12 +230,9 @@ window.GetMain = function()
 		
 		draw : function() {
 			this.Keyboard.OnTimer();
-			this.canvas.SetColor('black');
 			this.rc.fillStyle = "white";
 			this.rc.fillRect(-this.canvas.Width/2, -this.canvas.Height/2, this.canvas.Width, this.canvas.Height);
 			DrawScene(this, this.canvas);
-			this.rc.fillStyle = "black";
-			this.rc.fillRect(this._x, 0, 100, 10);
 		},
 		
 		_x : -200,
