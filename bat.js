@@ -51,8 +51,8 @@ function CreateBat()
 		let RightPt = LinInt(this.Position.p1, this.Position.p2, Bat.CurPos + Bat.Width);
 		
 		Bat.Points[0] = Add(LeftPt, 1, this.NormVec);
-		Bat.Points[1] = Add(LeftPt, -1, this.NormVec);
-		Bat.Points[2] = Add(RightPt, -1, this.NormVec);
+		Bat.Points[1] = Add(LeftPt, 0, this.NormVec);
+		Bat.Points[2] = Add(RightPt, 0, this.NormVec);
 		Bat.Points[3] = Add(RightPt, 1, this.NormVec);
 	};
 	

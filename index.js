@@ -14,7 +14,6 @@ function CreateNormalWall()
 		OnBallHit : function(Ball)
 		{
 			Ball.BounceBack(this.Position);
-			// just bounce back
 		},
 		SetPosition : function(pos) 
 		{
@@ -33,8 +32,7 @@ function CreatePlayerWall(Player)
 		},
 		bat : CreateBat(),		
 		draw : function (Canvas, Segment) 
-		{ 
-			
+		{ 			
 			this.bat.draw(Canvas);
 		},
 		OnBallHit : function(Ball, t)
@@ -55,9 +53,6 @@ function CreatePortalWall()
 {
 
 }
-
-
-
 
 function GenerateWallSegments(CenterPoint, Size, Count)
 {
@@ -155,13 +150,14 @@ function OnStart(Main, Canvas)
 	Main.Walls.push(CreatePlayerWall(Main.Players[1]));
 	Main.Walls.push(CreateNormalWall());
 	Main.Walls.push(CreateNormalWall());
+	//Main.Walls.push(CreateNormalWall());
 	
 	Main.WallSegments = GenerateWallSegments(Canvas.CenterPoint, Canvas.Height/3, Main.Walls.length);
 	Main.Walls.forEach((w,i) => w.SetPosition(Main.WallSegments[i]));
 	
 	Main.Walls.forEach((w) => w.init(Main));
 	
-	Main.Walls.forEach((w) => cd.RegisterLine(w.Position, w));
+	Main.Walls.forEach((w) => cd.RegisterSegment(w.Position, w));
 	
 	Main.Ball = CreateBall(CreatePoint(0,0));
 	
@@ -175,8 +171,10 @@ function CreateCanvas(Canvas)
 		x : 0,
 		y : 0,
 	};		
-	var rc = Canvas.getContext('2d');
-	rc.transform(1, 0, 0, -1, Canvas.width/2, Canvas.height/2);
+	//let rc = Canvas.getContext('2d');
+	let rc = Canvas.transferControlToOffscreen().getContext('2d');
+	rc.transform(1, 0, 0, 1, Canvas.width/2, Canvas.height/2);
+	rc.lineWidth = 3;
 	return {
 		SetColor : function(color) { rc.strokeStyle = color; },
 		SetFillColor : function(color) { rc.fillStyle = color; },
@@ -198,11 +196,19 @@ function CreateCanvas(Canvas)
 			rc.closePath();
 			rc.fill();
 		},
+		DrawText : function(Text, Point) {
+			rc.font = "15px Verdana";
+			rc.fillText(Text, Point.x, Point.y);
+		},
 		CenterPoint : cp,
 		Width : Canvas.width,
 		Height : Canvas.height,
 		Transform : function(m) {
 			rc.transform(m.a, m.d, m.b, m.e, m.c, m.f);
+		},
+		Clear : function ()
+		{
+			rc.clearRect(-this.Width/2, -this.Height/2, this.Width, this.Height);
 		}
 	};
 }
@@ -223,31 +229,29 @@ window.GetMain = function()
 	{
 		init : function (idCnv, idDiv) {
 			this.h5cnv = $(idCnv)[0];
-			this.h5cnv.width = screen.width;
-			this.h5cnv.height = screen.height;
-			this.rc = this.h5cnv.getContext('2d');
-			this.div = $(idDiv)[0];
-			this.rc.lineWidth = 3;
+			this.h5cnv.width = window.innerWidth;
+			this.h5cnv.height = window.innerHeight;
+			
 			this.canvas = CreateCanvas(this.h5cnv);
 			this.BoundRect = this.h5cnv.getBoundingClientRect();
 			this.h5cnv.addEventListener('mousemove', e => { 
-				this.div.innerText = "X:" + (e.clientX - this.BoundRect.left - this.h5cnv.width/2).toFixed(2) + 
-				" Y:" + -1*(e.clientY - this.BoundRect.top - this.h5cnv.height/2).toFixed(2);
+				this.txt = "X:" + (e.clientX - this.BoundRect.left - this.h5cnv.width/2).toFixed(2) + 
+				" Y:" + (e.clientY - this.BoundRect.top - this.h5cnv.height/2).toFixed(2);				
 			});
 			OnStart(this, this.canvas);
-			window.setInterval(() => this.draw(), 10);
+			window.setInterval(() => this.draw(), 20);
 		},
 		
 		Keyboard : CreateKeyboard(),
 		
 		draw : function() {
 			this.Keyboard.OnTimer();
-			this.rc.fillStyle = "white";
-			this.rc.fillRect(-this.canvas.Width/2, -this.canvas.Height/2, this.canvas.Width, this.canvas.Height);
+			this.canvas.Clear();
+			this.canvas.DrawText(this.txt, CreatePoint(0, -this.canvas.Height/2 + 20));
 			DrawScene(this, this.canvas);
 		},
 		
-		_x : -200,
+		txt : ''
 	};
 	
 	return m;

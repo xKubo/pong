@@ -158,15 +158,20 @@ function IntersectSegments(pos1, pos2)
 	};
 }
 
+function DotProduct(v1, v2)
+{
+	return v1.x*v2.x + v1.y*v2.y;
+}
+
 function ReflectVec(Vec, NormUnit)
 {
 	//r=d−2(d⋅n)n
 	
-	let ip = Vec.x*NormUnit.x+Vec.y*NormUnit.y;
+	let dp = DotProduct(Vec, NormUnit);
 	
 	return {
-		x : Vec.x - 2*ip*NormUnit.x,
-		y : Vec.y - 2*ip*NormUnit.y,
+		x : Vec.x - 2*dp*NormUnit.x,
+		y : Vec.y - 2*dp*NormUnit.y,
 	};
 }
 
@@ -178,6 +183,11 @@ function Add(Pt, c, Vec)
 		x : Pt.x + c*Vec.x,
 		y : Pt.y + c*Vec.y,
 	};
+}
+
+function InHalfPlane(LinePt, NormalVec, Pt)
+{
+	return DotProduct(NormalVec, PointDiff(Pt, LinePt));
 }
 
 

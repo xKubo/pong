@@ -1,11 +1,11 @@
 
-function ComputeLineCollision(res, li, Segment)
+function ComputeLineCollision(res, si, Segment)
 {
-	let is = IntersectSegments(li.Segment, Segment);
+	let is = IntersectSegments(si.Segment, Segment);
 	if (is)
 	{
 		let res = {};
-		res.Object = li.Object;
+		res.Object = si.Object;
 		res.tLine = is.t1;
 		return res;
 	}		
@@ -16,19 +16,19 @@ function ComputeLineCollision(res, li, Segment)
 function CreateCollisionDetector()
 {
 	let cd = {};
-	cd.Lines = [];
-	cd.RegisterLine = function(Segment, Object)
+	cd.Segments = [];
+	cd.RegisterSegment = function(Segment, Object)
 	{
-		let LineInfo = {
+		let SegmentInfo = {
 			Segment : Segment,
 			Object : Object,
 		};
-		cd.Lines.push(LineInfo);
+		cd.Segments.push(SegmentInfo);
 	};
 	cd.DetectCollision = function(Segment)
 	{
 		let res = null;		
-		this.Lines.forEach( li => res = ComputeLineCollision(res, li, Segment));
+		this.Segments.forEach( si => res = ComputeLineCollision(res, si, Segment));
 		return res;
 	};
 	return cd;
